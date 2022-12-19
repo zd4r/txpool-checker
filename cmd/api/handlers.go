@@ -42,7 +42,7 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 	}
 	defer client.Close()
 
-	// ethclient Dial
+	// HTTPS connection to Node
 	ethClient, err := ethclient.Dial(*nodeHTTPSUrl)
 	if err != nil {
 		log.Printf("[%v] %v\n", uuid, fmt.Errorf("error: %v", err))
