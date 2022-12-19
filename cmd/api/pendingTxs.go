@@ -34,10 +34,11 @@ func (p *txpoolConfig) pendingTxsSubscribe(wg *sync.WaitGroup, conn *websocket.C
 	method := "alchemy_pendingTransactions"
 	txsChan := make(chan PendingTx, 1024)
 
+	// Create subscription to new pending txs
 	sub, err := p.client.EthSubscribe(context.Background(), txsChan,
 		method,
 		map[string]string{
-			"toAddress": p.toAddress,
+			"toAddress": p.toAddress.String(),
 		},
 	)
 	if err != nil {
@@ -50,6 +51,7 @@ func (p *txpoolConfig) pendingTxsSubscribe(wg *sync.WaitGroup, conn *websocket.C
 	for {
 		select {
 		case tx := <-txsChan:
+			// Add new pending txs to txpool
 			log.Printf("[%v] New pending tx: %v\n", p.uuid, tx.Hash)
 			p.txpool.Store(tx.Hash, tx.From)
 			log.Printf("[%v] Pending txs count: %v | MAP: %#v\n", p.uuid, p.txpool.Count(), p.txpool)

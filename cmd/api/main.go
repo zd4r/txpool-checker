@@ -10,7 +10,8 @@ import (
 
 // initial variables
 var addr = flag.String("addr", "localhost:8081", "http service address")
-var nodeUrl = flag.String("node", "wss://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
+var nodeWSUrl = flag.String("nodeWs", "wss://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
+var nodeHTTPSUrl = flag.String("nodeHTTPS", "https://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
 
 // WebSocket upgrader set up
 var origins = []string{"http://localhost:8080"}
@@ -36,8 +37,6 @@ func main() {
 	app := Config{}
 
 	// Starting web server
-	log.Println("Node connection established")
-
 	http.HandleFunc("/txpool", app.listenTxpool)
 
 	log.Println("Server started localhost:8081")

@@ -7,14 +7,17 @@ import (
 	"sync"
 	"zd4rova/txpool-checker/internal/txpool"
 
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
 	uuid2 "github.com/google/uuid"
 )
 
 type txpoolConfig struct {
+	ethclient *ethclient.Client
 	client    *rpc.Client
 	txpool    *txpool.Txpool
-	toAddress string
+	toAddress common.Address
 	uuid      uuid2.UUID
 }
 
@@ -32,16 +35,23 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 	defer conn.Close()
 
 	// WebSocket connection to node
-	client, err := rpc.Dial(*nodeUrl)
+	client, err := rpc.Dial(*nodeWSUrl)
 	if err != nil {
 		log.Println("rpc dial:", fmt.Errorf("error: %v", err))
 		return
 	}
 	defer client.Close()
 
+	// ethclient Dial
+	ethClient, err := ethclient.Dial(*nodeHTTPSUrl)
+	if err != nil {
+		log.Printf("[%v] %v\n", uuid, fmt.Errorf("error: %v", err))
+	}
+
 	pool := txpoolConfig{
-		client: client,
-		uuid:   uuid,
+		client:    client,
+		ethclient: ethClient,
+		uuid:      uuid,
 	}
 
 	// Reading messages from client
@@ -52,7 +62,7 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		pool.toAddress = string(message)
+		pool.toAddress = common.HexToAddress(string(message))
 		log.Printf("[%v] New toAddress set: %v\n", uuid, pool.toAddress)
 
 		// Pending txs monitoring
