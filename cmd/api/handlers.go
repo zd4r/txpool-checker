@@ -20,20 +20,31 @@ type txpoolConfig struct {
 
 func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 	uuid := uuid2.New()
+
+	// Upgrade connection to ws protocol
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Printf("[%v] %v\n", uuid, fmt.Errorf("error upgrade: %v", err))
 		return
 	}
 	log.Printf("[%v] New connection\n", uuid)
-	defer log.Printf("[%v] Connections closed\n", uuid)
+	defer log.Printf("[%v] Client connections closed\n", uuid)
 	defer conn.Close()
 
+	// WebSocket connection to node
+	client, err := rpc.Dial(*nodeUrl)
+	if err != nil {
+		log.Println("rpc dial:", fmt.Errorf("error: %v", err))
+		return
+	}
+	defer client.Close()
+
 	pool := txpoolConfig{
-		client: app.NodeClient,
+		client: client,
 		uuid:   uuid,
 	}
 
+	// Reading messages from client
 	for {
 		mt, message, err := conn.ReadMessage()
 		if err != nil {

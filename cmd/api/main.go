@@ -2,11 +2,9 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/gorilla/websocket"
 )
 
@@ -26,10 +24,10 @@ var upgrader = websocket.Upgrader{
 			}
 		}
 		return false
-	}}
+	},
+}
 
 type Config struct {
-	NodeClient *rpc.Client
 }
 
 func main() {
@@ -37,16 +35,7 @@ func main() {
 
 	app := Config{}
 
-	// WebSocket connection to node
-	client, err := rpc.Dial(*nodeUrl)
-	if err != nil {
-		log.Println("rpc dial:", fmt.Errorf("error: %v", err))
-		return
-	}
-	defer client.Close()
-
 	// Starting web server
-	app.NodeClient = client
 	log.Println("Node connection established")
 
 	http.HandleFunc("/txpool", app.listenTxpool)
