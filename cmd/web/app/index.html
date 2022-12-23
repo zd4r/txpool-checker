@@ -27,7 +27,7 @@
     var socket = new WebSocket("ws://localhost:8081/txpool");
 
     socket.onopen = function () {
-        output.innerHTML += "Status: Connected\n";
+        output.innerHTML += "\nStatus: Connected";
     };
 
     socket.onmessage = function (e) {
@@ -38,6 +38,7 @@
     function send() {
         socket.send(input.value);
         input.value = "";
+        output.innerHTML = "\nPending txs count: -"
     }
 </script>
 </html>

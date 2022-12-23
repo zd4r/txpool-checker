@@ -10,8 +10,8 @@ import (
 
 // initial variables
 var addr = flag.String("addr", "localhost:8081", "http service address")
-var nodeWSUrl = flag.String("nodeWs", "wss://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
-var nodeHTTPSUrl = flag.String("nodeHTTPS", "https://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
+var ethclientWS = flag.String("nodeWs", "wss://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
+var ethclientHTTPS = flag.String("nodeHTTPS", "https://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
 
 // WebSocket upgrader set up
 var origins = []string{"http://localhost:8080"}

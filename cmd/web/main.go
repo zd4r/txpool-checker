@@ -14,8 +14,8 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	flag.Parse()
-	log.SetFlags(0)
 	http.HandleFunc("/", home)
+
 	log.Println("Server started localhost:8080")
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
