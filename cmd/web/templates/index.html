@@ -1,7 +1,7 @@
 <html>
 <div>
     <h1>Txpool explorer</h1>
-    <p>Set contract address to start tracking pending txs</p>
+    <p>Set contract address to start track new pending txs</p>
     <input id="input" type="text" size="40" />
     <button onclick="send()">Set</button>
     <pre id="output"></pre>
@@ -32,7 +32,7 @@
 
     socket.onmessage = function (e) {
         console.log(e)
-        output.innerHTML = "\nPending txs count: " + e.data + "\n";
+        output.innerHTML = "\nPending txs count: " + e.data;
     };
 
     function send() {

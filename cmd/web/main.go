@@ -6,10 +6,10 @@ import (
 	"net/http"
 )
 
-var addr = flag.String("addr", "localhost:8080", "http service address")
+var addr = flag.String("addr", ":8080", "http service address")
 
 func home(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./app/index.html")
+	http.ServeFile(w, r, "./templates/index.html")
 }
 
 func main() {

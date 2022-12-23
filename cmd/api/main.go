@@ -9,7 +9,7 @@ import (
 )
 
 // initial variables
-var addr = flag.String("addr", "localhost:8081", "http service address")
+var addr = flag.String("addr", ":8081", "http service address")
 var ethclientWS = flag.String("nodeWs", "wss://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
 var ethclientHTTPS = flag.String("nodeHTTPS", "https://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
 
