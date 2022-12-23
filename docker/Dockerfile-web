@@ -19,7 +19,7 @@ RUN apk add -U --no-cache ca-certificates
 # Step 4: Final
 FROM scratch
 
-EXPOSE 8080
+EXPOSE 80
 
 # GOPATH for scratch images is /
 COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
