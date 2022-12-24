@@ -50,12 +50,12 @@ func (p *txpoolGlobal) minedTxsSubscribe(wg *sync.WaitGroup, conn *websocket.Con
 			if err != nil {
 				log.Printf("[%v] %v\n", p.config.uuid, fmt.Errorf("blockNumber decode error: %v", err))
 			}
-			log.Printf("[%v] New block: %v\n", p.config.uuid, blockNumber)
 
 			block, err := p.config.ethClientHTTPS.BlockByNumber(context.Background(), blockNumber)
 			if err != nil {
 				log.Printf("[%v] %v\n", p.config.uuid, fmt.Errorf("block by number error: %v", err))
 			}
+			log.Printf("[%v] New block: %v\n Transactions in this block: %#v", p.config.uuid, blockNumber, block.Transactions())
 
 			// Remove mined txs from txpool
 			for _, tx := range block.Transactions() {
