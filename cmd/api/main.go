@@ -14,7 +14,7 @@ var ethclientWS = flag.String("nodeWs", "wss://eth-mainnet.g.alchemy.com/v2/ONdY
 var ethclientHTTPS = flag.String("nodeHTTPS", "https://eth-mainnet.g.alchemy.com/v2/ONdYH5RobUhuIa963-uQcVqT1R1DBKiM", "node ws url")
 
 // WebSocket upgrader set up
-var origins = []string{"http://localhost:8080"}
+var origins = []string{"http://localhost:8080", "http://217.151.231.111:8080/"}
 var upgrader = websocket.Upgrader{
 	// Resolve cross-domain problems
 	CheckOrigin: func(r *http.Request) bool {
