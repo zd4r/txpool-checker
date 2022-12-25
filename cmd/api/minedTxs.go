@@ -55,10 +55,11 @@ func (p *txpoolGlobal) minedTxsSubscribe(wg *sync.WaitGroup, conn *websocket.Con
 			if err != nil {
 				log.Printf("[%v] %v\n", p.config.uuid, fmt.Errorf("block by number error: %v", err))
 			}
-			log.Printf("[%v] New block: %v\n Transactions in this block: %#v", p.config.uuid, blockNumber, block.Transactions())
+			log.Printf("[%v] New block: %v\n", p.config.uuid, blockNumber)
 
 			// Remove mined txs from txpool
 			for _, tx := range block.Transactions() {
+				log.Printf("[%v] Mined %v in block %v\n", p.config.uuid, tx.Hash(), blockNumber)
 				if tx.To() != nil && tx.To().String() == p.config.toAddress.String() {
 					p.txpoolPending.Delete(tx.Hash().String())
 					p.txpoolQueued.Delete(tx.Hash().String())
