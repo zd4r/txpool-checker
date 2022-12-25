@@ -91,6 +91,7 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 		go poolGlobal.pendingTxsSubscribe(wg, conn, mt)
 		wg.Add(1)
 		go poolGlobal.minedTxsSubscribe(wg, conn, mt)
+		// TODO: add method to clean up dropped txs (probably by comparing tx nonce and acc nonce)
 	}
 	wg.Wait()
 }
