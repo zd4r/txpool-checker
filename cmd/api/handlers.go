@@ -97,7 +97,7 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 		go poolGlobal.pendingTxsSubscribe(wg, conn)
 		wg.Add(1)
 		go poolGlobal.minedTxsSubscribe(wg, conn)
-		wg.Add(1)
+		//wg.Add(1)
 		//go poolGlobal.dropReplacedPendingTxs(wg)
 		//wg.Add(1)
 		//go poolGlobal.dropReplacedQueuedTxs(wg)
