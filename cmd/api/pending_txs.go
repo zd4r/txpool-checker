@@ -29,7 +29,7 @@ type PendingTx struct {
 	S                string      `json:"s"`
 }
 
-func (p *txpoolGlobal) pendingTxsSubscribe(wg *sync.WaitGroup, conn *websocket.Conn, mt int) {
+func (p *txpoolGlobal) pendingTxsSubscribe(wg *sync.WaitGroup, conn *websocket.Conn) {
 	defer wg.Done()
 
 	method := "alchemy_pendingTransactions"

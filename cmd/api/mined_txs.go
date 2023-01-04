@@ -27,7 +27,7 @@ type Block struct {
 	TransactionsRoot string `json:"transactionsRoot"`
 }
 
-func (p *txpoolGlobal) minedTxsSubscribe(wg *sync.WaitGroup, conn *websocket.Conn, mt int) {
+func (p *txpoolGlobal) minedTxsSubscribe(wg *sync.WaitGroup, conn *websocket.Conn) {
 	defer wg.Done()
 
 	method := "newHeads"

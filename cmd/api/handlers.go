@@ -20,12 +20,14 @@ type txpoolGlobal struct {
 }
 
 type txpoolConfig struct {
-	uuid           uuid2.UUID
-	toAddress      common.Address
-	ethClientHTTPS *ethclient.Client
-	rpcClient      *rpc.Client
-	cancelChanP    chan any
-	cancelChanM    chan any
+	uuid            uuid2.UUID
+	toAddress       common.Address
+	ethClientHTTPS  *ethclient.Client
+	rpcClient       *rpc.Client
+	cancelChanP     chan any
+	cancelChanM     chan any
+	cancelChanDropP chan any
+	cancelChanDropQ chan any
 }
 
 func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
@@ -58,19 +60,21 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 
 	poolGlobal := txpoolGlobal{
 		config: struct {
-			uuid           uuid2.UUID
-			toAddress      common.Address
-			ethClientHTTPS *ethclient.Client
-			rpcClient      *rpc.Client
-			cancelChanP    chan any
-			cancelChanM    chan any
+			uuid            uuid2.UUID
+			toAddress       common.Address
+			ethClientHTTPS  *ethclient.Client
+			rpcClient       *rpc.Client
+			cancelChanP     chan any
+			cancelChanM     chan any
+			cancelChanDropP chan any
+			cancelChanDropQ chan any
 		}{uuid: uuid, ethClientHTTPS: ethClientHTTPS, rpcClient: ethClientWS, cancelChanP: make(chan any), cancelChanM: make(chan any)},
 	}
 
 	wg := &sync.WaitGroup{}
 	// Reading messages from client
 	for {
-		mt, message, err := conn.ReadMessage()
+		_, message, err := conn.ReadMessage()
 		if err != nil {
 			log.Printf("[%v] %v\n", uuid, fmt.Errorf("error read: %v", err))
 			return
@@ -79,6 +83,8 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 		if poolGlobal.config.toAddress.String() != "0x0000000000000000000000000000000000000000" {
 			poolGlobal.config.cancelChanP <- struct{}{}
 			poolGlobal.config.cancelChanM <- struct{}{}
+			poolGlobal.config.cancelChanDropP <- struct{}{}
+			poolGlobal.config.cancelChanDropQ <- struct{}{}
 		}
 
 		poolGlobal.txpoolPending = txpool.New()
@@ -88,9 +94,13 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 
 		// Pending txs monitoring
 		wg.Add(1)
-		go poolGlobal.pendingTxsSubscribe(wg, conn, mt)
+		go poolGlobal.pendingTxsSubscribe(wg, conn)
 		wg.Add(1)
-		go poolGlobal.minedTxsSubscribe(wg, conn, mt)
+		go poolGlobal.minedTxsSubscribe(wg, conn)
+		wg.Add(1)
+		go poolGlobal.dropReplacedPendingTxs(wg)
+		wg.Add(1)
+		go poolGlobal.dropReplacedQueuedTxs(wg)
 		// TODO: add method to clean up dropped txs (probably by comparing tx nonce and acc nonce)
 	}
 	wg.Wait()

@@ -37,3 +37,11 @@ func (tp *Txpool) Count() int {
 	defer tp.mx.Unlock()
 	return len(tp.m)
 }
+
+func (tp *Txpool) Range(f func(k, v string) bool) {
+	for k, v := range tp.m {
+		if ok := f(k, v); !ok {
+			return
+		}
+	}
+}
