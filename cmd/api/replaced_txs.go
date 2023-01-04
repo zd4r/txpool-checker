@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -39,6 +40,7 @@ func (p *txpoolGlobal) dropReplacedPendingTxs(wg *sync.WaitGroup) {
 			return
 		default:
 			p.txpoolPending.Range(f)
+			time.Sleep(5 * time.Second)
 		}
 	}
 }
@@ -73,6 +75,7 @@ func (p *txpoolGlobal) dropReplacedQueuedTxs(wg *sync.WaitGroup) {
 			return
 		default:
 			p.txpoolQueued.Range(f)
+			time.Sleep(5 * time.Second)
 		}
 	}
 }
