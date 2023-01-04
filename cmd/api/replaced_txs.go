@@ -61,14 +61,14 @@ func (p *txpoolGlobal) dropReplacedQueuedTxs(wg *sync.WaitGroup) {
 
 		if accNonce > tx.Nonce() {
 			log.Printf("[%v] %v\n", p.config.uuid, fmt.Sprintf("replaced tx drop: %v", txHash))
-			p.txpoolPending.Delete(txHash)
+			p.txpoolQueued.Delete(txHash)
 		}
 		return true
 	}
 
 	for {
 		select {
-		case <-p.config.cancelChanDropP:
+		case <-p.config.cancelChanDropQ:
 			log.Printf("[%v] Stop drop queued txs for current pool due to address update\n", p.config.uuid)
 			return
 		default:
