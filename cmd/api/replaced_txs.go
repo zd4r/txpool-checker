@@ -19,6 +19,7 @@ func (p *txpoolGlobal) dropReplacedPendingTxs(wg *sync.WaitGroup) {
 			return true
 		}
 
+		log.Printf("[%v] CHECK %v\n", p.config.uuid, txHash)
 		tx, _, err := p.config.ethClientHTTPS.TransactionByHash(context.Background(), common.HexToHash(txHash[:2]))
 		if err != nil {
 			log.Printf("[%v] %v\n", p.config.uuid, fmt.Errorf("transactionByHash error: %v", err))
