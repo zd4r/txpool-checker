@@ -83,8 +83,8 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 		if poolGlobal.config.toAddress.String() != "0x0000000000000000000000000000000000000000" {
 			poolGlobal.config.cancelChanP <- struct{}{}
 			poolGlobal.config.cancelChanM <- struct{}{}
-			poolGlobal.config.cancelChanDropP <- struct{}{}
-			poolGlobal.config.cancelChanDropQ <- struct{}{}
+			//poolGlobal.config.cancelChanDropP <- struct{}{}
+			//poolGlobal.config.cancelChanDropQ <- struct{}{}
 		}
 
 		poolGlobal.txpoolPending = txpool.New()
@@ -98,9 +98,9 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 		wg.Add(1)
 		go poolGlobal.minedTxsSubscribe(wg, conn)
 		wg.Add(1)
-		go poolGlobal.dropReplacedPendingTxs(wg)
-		wg.Add(1)
-		go poolGlobal.dropReplacedQueuedTxs(wg)
+		//go poolGlobal.dropReplacedPendingTxs(wg)
+		//wg.Add(1)
+		//go poolGlobal.dropReplacedQueuedTxs(wg)
 		// TODO: add method to clean up dropped txs (probably by comparing tx nonce and acc nonce)
 	}
 	wg.Wait()
