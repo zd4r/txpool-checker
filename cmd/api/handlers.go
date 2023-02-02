@@ -93,6 +93,7 @@ func (app *Config) listenTxpool(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[%v] New toAddress set: %v\n", uuid, poolGlobal.config.toAddress)
 
 		// Pending txs monitoring
+		// TODO: fix concurrent write to websocket connection
 		wg.Add(1)
 		go poolGlobal.pendingTxsSubscribe(wg, conn)
 		wg.Add(1)
